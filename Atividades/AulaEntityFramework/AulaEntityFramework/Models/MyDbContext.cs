@@ -12,5 +12,6 @@ namespace AulaEntityFramework.Models
         // Nesta sessão, especificamos as classes do model que serão espelhadas em tabelas do banco de dados.
 
         public DbSet<Pessoa> Pessoas { get; set; }
+        public DbSet<Endereco> Enderecos { get; set; }
     }
 }
