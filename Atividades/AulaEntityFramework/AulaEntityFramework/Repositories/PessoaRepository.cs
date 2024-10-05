@@ -13,7 +13,19 @@ namespace AulaEntityFramework.Repositories
             _dbContext = context;
         }
 
-        public Pessoa? Get(int id)
+        public Pessoa Delete(long id)
+        {
+            var pessoa = Get(id);
+            if (pessoa is null) {
+                return null!;
+            }
+
+            _dbContext.Pessoas.Remove(pessoa);
+            _dbContext.SaveChanges();
+            return pessoa;
+        }
+
+        public Pessoa? Get(long id)
         {
             var pessoa = _dbContext.Pessoas.Include(e => e.Enderecos).Where(w => w.Id == id).FirstOrDefault();
             return pessoa;
@@ -42,6 +54,25 @@ namespace AulaEntityFramework.Repositories
         public List<Pessoa>? GetByName(string? name)
         {
             return _dbContext.Pessoas.Include(e => e.Enderecos).Where(p => p.Name!.Equals(name)).ToList();
+        }
+
+        public List<Pessoa>? GetByPeriodBirthDate(DateTime startDate, DateTime endDate)
+        {
+            return _dbContext.Pessoas.Include(e => e.Enderecos).Where(p => p.BirthDate >= startDate && p.BirthDate <= endDate).ToList();
+        }
+
+        public Pessoa Insert(Pessoa person)
+        {
+            _dbContext.Pessoas.Add(person);
+            _dbContext.SaveChanges();
+            return person;
+        }
+
+        public Pessoa Update(Pessoa person)
+        {
+            _dbContext.Pessoas.Update(person);
+            _dbContext.SaveChanges();
+            return person;
         }
     }
 }
