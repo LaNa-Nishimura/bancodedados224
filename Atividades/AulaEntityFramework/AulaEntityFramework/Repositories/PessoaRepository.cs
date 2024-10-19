@@ -38,7 +38,7 @@ namespace AulaEntityFramework.Repositories
 
         public List<Pessoa>? GetByBirthDate(DateTime date)
         {
-            return _dbContext.Pessoas.Include(e => e.Enderecos).Where(p => p.BirthDate == date).ToList();
+            return _dbContext.Pessoas.Include(e => e.Enderecos).Where(p => p.BirthDate.Year == date.Year && p.BirthDate.Month == date.Month && p.BirthDate.Day == date.Day).ToList();
         }
 
         public List<Pessoa>? GetByBirthMonth(int month)

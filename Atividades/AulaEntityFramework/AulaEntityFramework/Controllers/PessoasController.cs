@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AulaEntityFramework.Models;
 using AulaEntityFramework.Repositories;
+using Microsoft.IdentityModel.Tokens;
 
 namespace AulaEntityFramework.Controllers
 {
@@ -19,13 +20,21 @@ namespace AulaEntityFramework.Controllers
             _pessoaRepository = pessoaRepository;
         }
 
-        // GET: Pessoas
-        public IActionResult Index()
+        [HttpGet]
+
+        public IActionResult Index(string bdt, string bm)
         {
-            return View(_pessoaRepository.GetAll());
+            var repo = _pessoaRepository.GetAll();
+            if (!bdt.IsNullOrEmpty()) {
+                repo = _pessoaRepository.GetByBirthDate(Convert.ToDateTime(bdt));
+            }
+            if (!bm.IsNullOrEmpty()) {
+                repo = _pessoaRepository.GetByBirthMonth(Convert.ToInt32(bm));
+            }
+            return View(repo);
         }
 
-        // GET: Pessoas/Details/5
+        [HttpPost]
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
@@ -42,13 +51,12 @@ namespace AulaEntityFramework.Controllers
             return View(pessoa);
         }
 
-        // GET: Pessoas/Create
+        [HttpPost]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Pessoas/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -63,7 +71,7 @@ namespace AulaEntityFramework.Controllers
             return View(pessoa);
         }
 
-        // GET: Pessoas/Edit/5
+        [HttpPost]
         public async Task<IActionResult> Edit(long? id)
         {
             if (id == null)
@@ -79,7 +87,6 @@ namespace AulaEntityFramework.Controllers
             return View(pessoa);
         }
 
-        // POST: Pessoas/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -113,7 +120,7 @@ namespace AulaEntityFramework.Controllers
             return View(pessoa);
         }
 
-        // GET: Pessoas/Delete/5
+        [HttpPost]
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null)
@@ -130,7 +137,6 @@ namespace AulaEntityFramework.Controllers
             return View(pessoa);
         }
 
-        // POST: Pessoas/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
